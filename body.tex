@@ -66,21 +66,49 @@ For the proof of concept we could leave out the Prompt Database (this is a conve
 
 \subsection{Cloud based prompt processing}\label{sect:pp}
 
-Prompt processing \citedsp{LDM-151} is a questionable part of processing on the cloud - hence also a very interesting use case, because the answer is not obvious. It is also the part of the system which runs in a {\em bursty manner} e.g. it runs at night as images are taken and in a more limited form during only part of the day.
-To meet the one minute goal for processing money has been put into building a rapid transfer of files to NCSA.
-We would have to assess if we could transfer files into the cloud fast enough to make the alert processing work to schedule and its requirements to produce alerts in one minute..
-The fast networks already deployed for LSST should be applicable, but further analysis would be required.
-We have a preliminary Alert Distribution framework \footnote{https://dmtn-028.lsst.io/} - which was already run on AWS so this is easy to do.
-We have not yet deployed a large-scale alert Production which is specified to run on  2 clusters of one CPU per CCD on the camera i.e. 189 CPUs in each cluster.
-This would be an interesting real-time test i.e. this system is to process the images from the telescope in 1 minute.
+\textit{Prompt processing} \citedsp{LDM-151} is the umbrella term used to describe processing which produces data products continuously while LSST operates.
+Broadly, this falls into three categories:
+
+\begin{enumerate}
+
+\item{\textit{Image reduction and differencing}, in which images are received from the camera, calibrated, and compared to deep template images of the same part of sky to identify transient and variable sources;}
+\item{\textit{Alert distribution}, in which notifications of transients and variables are distributed to the community;}
+\item{\textit{Moving objects processing}, in which solar system objects are identified and their orbits tracked.}
+
+\end{enumerate}
+
+We expect to issue around $10^7$ alerts per night during normal operations.
+Further, the project is required to make these alerts available to the community within no more than 60\,s of the telescope shutter closing.
+This imposes stringent latency and throughput requirements on items 1 \& 2 above.
+Moving object processing can be run during the day, and is therefore a less challenging — and for this purpose less interesting — use case.
+
+One night of LSST observing generates appoximately 20\,TB of data in a ``bursty'' fashion (we visit each field for a total of 37\,s, taking two consecutive exposures which are combined by the data processing system).
+In order to meet our latency requirements, we have invested in fast networking to enable rapid transfer of this data to processing systems at NCSA.
+
+Once on the compute systems, data from each of the 189 CCDs in the camera is processed in parallel: broadly, we expect a single CPU with access to 4\,GB RAM to handle each CCD independently, taking somewhat less than a minute to complete.
+In operations, we anticipate deploying two separate clusters, or ``chains'', with each processing alternating visits.
+
+These processing chains will then feed the results of their processing to the alert distirbution system, based on Apache Kafka\footnote{\url{http://kafka.apache.org}}, for distribution to the community.
+A prototype of this system has already been deployed on Amazon AWS \citeds{DMTN-028}.
+
+This suggests two, related, proof of concept exercises:
+
+\begin{itemize}
+
+\item{Demonstrate rapid ingest and image processing;}
+\item{Demonstrate at-scale alert distribution.}
+
+\end{itemize}
 
 \subsubsection{Potential needs}
-{\color{red} John ?}
- Assume we did a single chain instead of 2 that would be 189 CPUs.  One night's data is 20TB; with processing and staging this system would need about 60TB of disk - for a POC though a couple of TB should be sufficient to run a few images though the system.
 
-The Alert distribution would need 8 nodes with 4CPUs/30GB and 200GB storage.
+Demonstrating image processing at scale could be achieved with a single processing chain (ie, 189 CPU cores, with access to 4\,GB RAM per core).
+Around 60\,TB disk storage is required for a single night of data (including processed data products).
+However, a smaller dataset could be defined for testing purposes.
 
+Prompt image processing would also require a database instance to serve as the Prompt Products Database (PPDB).
 
+Deploying a realistic alert distribution system would require three systems, each with access to 24 CPU cores and 80\,GB RAM.
 
 \section{Conclusion}
 A number of potential POCs are discussed above with approximates sizes/needs. We should pick one or more to develop further.
