@@ -1,8 +1,8 @@
 #
 #
 
-SRC=DMTN-072.tex
-tex=$(SRC) body.tex   Amazo*tex Physi*tex Inputs.tex
+SRC=DMTN-*.tex
+tex=$(SRC) body.tex   
 
 OBJ=$(SRC:.tex=.pdf)
 
@@ -14,6 +14,6 @@ clean :
 	latexmk -c
 	rm *.pdf
 
-acronyms.tex :$(tex) myacronyms.tex
-	acronyms.csh  $(tex)
+acronyms.tex :$(tex) myacronyms.txt
+	generateAcronyms.py  $(tex)
 
