@@ -1,1 +1,8 @@
 _build/
+*log
+*fls
+*aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.out
