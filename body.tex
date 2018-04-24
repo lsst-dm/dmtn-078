@@ -58,7 +58,7 @@ Theoretically we would also have a batch system and more near the data compute r
 
 {\color{red} Xiuqin }
 Firefly also requires at least a pair of  server - theses should be 32 cores
-with 128 GB memory. In addition these should have a shared disk volume order 500GB.
+with 128 GB memory. In addition these should have a shared disk volume order 500GBi, preferably SSD.
 
 Finally there is a filesystem to store the image data. Our current code assumes a Posix filesystem, but we have made some modifications towards supporting a back-end object store. Additional investment in this direction is unlikely to happen before Fall 2018. LSST will produce over its lifetime around 60 PB of raw image data,  the final data volume including the processed images is estimated to be around 0.5 Exabytes.  For the POC 1 PB would be sufficient to see some performance and management of a large disk volume.
 
