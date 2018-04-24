@@ -64,9 +64,8 @@ For a proof of concept let's assume we would go with 20 simultaneous users to 40
 Each user should also have around 4GB of RAM.
 Ideally, we would also have a batch system to control the compute resources but perhaps for a proof of concept this may be treated as a desire rather than a requirement.
 
-{\color{red} Xiuqin }
 Firefly also requires at least a pair of  server - theses should be 32 cores
-with 128 GB memory. In addition these should have a shared disk volume order 500GBi, preferably SSD.
+with 128 GB memory. In addition these should have a shared disk volume order 500GB, preferably SSD.
 
 Finally there is a filesystem to store the image data.
 Our current code assumes a POSIX filesystem, but we have made some modifications towards supporting an object-store back end.
