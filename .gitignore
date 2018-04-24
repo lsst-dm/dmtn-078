@@ -6,3 +6,4 @@ _build/
 *.blg
 *.fdb_latexmk
 *.out
+DMTN-078.pdf
