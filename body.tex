@@ -51,13 +51,14 @@ LSST data becomes public after 2 years. However there is no budget allocated to 
 
 \subsubsection {Potential needs}
 All the science platform components are deployable with Kubernetes.   The Qserv database component is a fixed size resource as discussed in \secref{sect:qservneeds}.
-In addition one or preferably two ervers should be provisioned for the  web services.
+In addition one or preferably two servers should be provisioned for the  web services.
 
 Alongside that one needs to have the JupyterHub environment \footnote{see https://github.com/lsst-sqre/jupyterlabdemo}; depending on the assumed load, this is relatively modest as it requires only $\sim2$ servers to set up, and it is recommended to have 2 CPUs per simultaneous user. For a proof of concept let's assume we would go with 20 simultaneous users to 40 CPUs or 10 nodes depending on the type of node. Each user should also have around 4GB of RAM.
 Theoretically we would also have a batch system and more near the data compute resources but perhaps for a proof of concept this may be treated as a desirable.
 
 {\color{red} Xiuqin }
-Firefly also requires at least a pair of  server is - theses should be a fairly large nodes with a lot of RAM since it is essentially a web server.
+Firefly also requires at least a pair of  server - theses should be 32 cores
+with 128 GB memory. In addition these should have a shared disk volume order 500GB.
 
 Finally there is a filesystem to store the image data. Our current code assumes a Posix filesystem, but we have made some modifications towards supporting a back-end object store. Additional investment in this direction is unlikely to happen before Fall 2018. LSST will produce over its lifetime around 60 PB of raw image data,  the final data volume including the processed images is estimated to be around 0.5 Exabytes.  For the POC 1 PB would be sufficient to see some performance and management of a large disk volume.
 
