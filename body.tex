@@ -73,7 +73,7 @@ Additional investment in this direction is unlikely to happen before Fall 2018.
 LSST will produce over its lifetime around 60\,PB of raw image data, the final data volume including the processed images is estimated to be around 0.5\,EB.
 For the POC 1\,PB would be sufficient to evaluate performance and management of a large disk volume.
 
-For the proof of concept we could leave out the Prompt Products Database (this is a conventional e.g. Oracle database).
+For the proof of concept we could leave out the Prompt Products Database (PPDB this is a conventional e.g. Oracle database)\footnote {This PPDB would be required for the Prompt Processing POC if we go that way}.
 
 \subsection{Cloud based prompt processing}\label{sect:pp}
 
@@ -93,13 +93,13 @@ Further, the project is required to make these alerts available to the community
 This imposes stringent latency and throughput requirements on items 1 \& 2 above.
 Moving object processing can be run during the day, and is therefore a less challenging — and for this purpose less interesting — use case.
 
-One night of LSST observing generates appoximately 20\,TB of data in a ``bursty'' fashion (we visit each field for a total of 37\,s, taking two consecutive exposures which are combined by the data processing system).
+One night of LSST observing generates approximately 20\,TB of data in a ``bursty'' fashion (we visit each field for a total of 37\,s, taking two consecutive exposures which are combined by the data processing system).
 In order to meet our latency requirements, we have invested in fast networking to enable rapid transfer of this data to processing systems at NCSA.
 
 Once on the compute systems, data from each of the 189 CCDs in the camera is processed in parallel: broadly, we expect a single CPU with access to 4\,GB RAM to handle each CCD independently, taking somewhat less than a minute to complete.
 In operations, we anticipate deploying two separate clusters, or ``chains'', with each processing alternating visits.
 
-These processing chains will then feed the results of their processing to the alert distirbution system, based on Apache Kafka\footnote{\url{http://kafka.apache.org}}, for distribution to the community.
+These processing chains will then feed the results of their processing to the alert distribution system, based on Apache Kafka\footnote{\url{http://kafka.apache.org}}, for distribution to the community.
 A prototype of this system has already been deployed on Amazon AWS \citeds{DMTN-028}.
 
 This suggests two, related, proof of concept exercises:
