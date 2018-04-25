@@ -12,13 +12,13 @@ We believe we are pushing the boundaries of deployments of this sort: any help w
 
 \section{Cloud proofs of concept}\label{sect:pocs}
 
-Much of the LSST Data Management System (DMS) – and, certainly, everything described below — is deployable using Kubernetes.
+Much of the LSST Data Management System (DMS) — and, certainly, everything described below — is deployable using Kubernetes.
 This provides us with a lot of flexibility to port our system across service offerings, and would enable us to easily adopt a hybrid cloud plus on-premises infrastructure.
 
 Moving to a cloud-based infrastructure could potentially save on personnel, as no hands-on hardware maintenance would be required.
 Although this is equivalent to a relatively small fraction of the construction budget, it would represent a substantial sum dedicated to non-core-business during operations.
 
-We can probably not move wholescale to the cloud: we are committed to providing a physical Data Access Center (DAC) in Chile, and some physical hardware must remain on the mountain and in the Commissioning Cluster.
+We can probably not move wholesale to the cloud: we are committed to providing a physical Data Access Center (DAC) in Chile, and some physical hardware must remain on the mountain and in the Commissioning Cluster.
 However, there are potentially a number of opportunities to migrate a subset of DM services to the cloud if we could see a sensible way forward.
 
 \subsection{Qserv: the LSST database}\label{sect:qserv}
@@ -34,7 +34,8 @@ However, Qserv itself is primarily useful in the context of the Science Platform
 To set up a Qserv instance we would need at least 40 large nodes with physically attached storage on the order of 5 terabytes per node.
 To run a set of convincing tests we would need that up for order two months.
 
-This would be a  demonstration only - the final catalogs (2032) will be order 15PB and the number of nodes and attached storage eventually has to scale to that size.
+This would be a  demonstration only — the final catalogs (2032) will be order 15PB and the number of nodes and attached storage eventually have to scale to that size.
+
 
 \subsection{Cloud-based Science Platform} \label{sect:platform}
 
@@ -60,10 +61,10 @@ In addition one or preferably two servers should be provisioned for the web serv
 Alongside that one needs to have the JupyterHub environment \footnote{see https://github.com/lsst-sqre/jupyterlabdemo}; depending on the assumed load, this is relatively modest as it requires only $\sim2$ servers to set up, and it is recommended to have 2 CPUs per simultaneous user.
 For a proof of concept let's assume we would go with 20 simultaneous users to 40 CPUs or 10 nodes depending on the type of node.
 Each user should also have around 4GB of RAM.
-Ideally, we would also have a batch system to control the compute resources but perhaps for a proof of concept this may be treated as a desire rather than a requirement.
+Ideally, we would also have a batch system controlling additional compute resources for more extensive analyses, but perhaps for a proof of concept this may be treated as a desire rather than a requirement.
 
-Firefly also requires at least a pair of  server - theses should be 32 cores
-with 128 GB memory. In addition these should have a shared disk volume order 500GB, preferably SSD.
+Firefly also requires at least a pair of servers — these should be 32 cores
+with 128 GB memory. In addition these should have a shared disk volume of order 500GB, preferably SSD.
 
 Finally there is a filesystem to store the image data.
 Our current code assumes a POSIX filesystem, but we have made some modifications towards supporting an object-store back end.
@@ -91,14 +92,16 @@ Further, the project is required to make these alerts available to the community
 This imposes stringent latency and throughput requirements on items 1 \& 2 above.
 Moving object processing can be run during the day, and is therefore a less challenging — and for this purpose less interesting — use case.
 
-One night of LSST observing generates approximately 20\,TB of data in a ``bursty'' fashion (we visit each field for a total of 37\,s, taking two consecutive exposures which are combined by the data processing system).
+One night of LSST observing generates appoximately 20\,TB of data in a ``bursty'' fashion (we visit each field for a total of 37\,s, taking two consecutive exposures which are combined by the data processing system).
+In addition, the compute resources are more lightly loaded during the daytime, when they are used to perform fewer and simpler analyses of calibration images.
 In order to meet our latency requirements, we have invested in fast networking to enable rapid transfer of this data to processing systems at NCSA.
 
 Once on the compute systems, data from each of the 189 CCDs in the camera is processed in parallel: broadly, we expect a single CPU with access to 4\,GB RAM to handle each CCD independently, taking somewhat less than a minute to complete.
 In operations, we anticipate deploying two separate clusters, or ``chains'', with each processing alternating visits.
 
 These processing chains will then feed the results of their processing to the alert distribution system, based on Apache Kafka\footnote{\url{http://kafka.apache.org}}, for distribution to the community.
-A prototype of this system has already been deployed on Amazon AWS \citeds{DMTN-028}.
+A prototype of this latter system has already been deployed on Amazon AWS \citeds{DMTN-028}.
+
 
 This suggests two, related, proof of concept exercises:
 
