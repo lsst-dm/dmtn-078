@@ -27,14 +27,14 @@ The bespoke Qserv database system \citedsp{LDM-135}, under development at SLAC, 
 However it is now deployable with Kubernetes, and no longer requires special hardware: physically attached storage is needed, but this is available on cloud offerings.
 
 Qserv's performance characteristics are well understood, and would form an excellent testbed for LSST operations in a cloud environment.
-However, Qserv itself is primarily useful in the contest of the Science Platform (\secref{sect:platform}), so the longer term benefits of a Qserv-only deployment would be limited.
+However, Qserv itself is primarily useful in the context of the Science Platform (\secref{sect:platform}), so the longer term benefits of a Qserv-only deployment would be limited.
 
 \subsubsection{Potential needs} \label{sect:qservneeds}
-{\color{red} Fritz }
-To set up Qserv  we would need at least 40 large nodes with physically attached storage in to order of 2 terabytes per node.
+
+To set up a Qserv instance we would need at least 40 large nodes with physically attached storage on the order of 5 terabytes per node.
 To run a set of convincing tests we would need that up for order two months.
 
-This would be a  demonstration only - the final catalogs (2032) will be order 15PB and the number of nodes and attached storage eventually have to scale to that size.
+This would be a  demonstration only - the final catalogs (2032) will be order 15PB and the number of nodes and attached storage eventually has to scale to that size.
 
 \subsection{Cloud-based Science Platform} \label{sect:platform}
 
