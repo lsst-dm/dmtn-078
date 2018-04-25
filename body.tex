@@ -27,23 +27,23 @@ The bespoke Qserv database system \citedsp{LDM-135}, under development at SLAC, 
 However it is now deployable with Kubernetes, and no longer requires special hardware: physically attached storage is needed, but this is available on cloud offerings.
 
 Qserv's performance characteristics are well understood, and would form an excellent testbed for LSST operations in a cloud environment.
-However, Qserv itself is primarily useful in the contest of the Science Platform (\secref{sect:platform}), so the longer term benefits of a Qserv-only deployment would be limited.
+However, Qserv itself is primarily useful in the context of the Science Platform (\secref{sect:platform}), so the longer term benefits of a Qserv-only deployment would be limited.
 
 \subsubsection{Potential needs} \label{sect:qservneeds}
-{\color{red} Fritz }
-To set up Qserv  we would need at least 40 large nodes with physically attached storage in to order of 2 terabytes per node.
+
+To set up a Qserv instance we would need at least 40 large nodes with physically attached storage on the order of 5 terabytes per node.
 To run a set of convincing tests we would need that up for order two months.
 
-This would be a  demonstration only - the final catalogs (2032) will be order 15PB and the number of nodes and attached storage eventually have to scale to that size.
+This would be a  demonstration only - the final catalogs (2032) will be order 15PB and the number of nodes and attached storage eventually has to scale to that size.
 
 \subsection{Cloud-based Science Platform} \label{sect:platform}
 
-The LSST Science Platform \citedsp{LSE-319} envisons three key ways in which scientists will interact with LSST data: through a visualization portal, a Jupyter notebook-based interface and through a variety of web services.
+The LSST Science Platform \citedsp{LSE-319} envisions three key ways in which scientists will interact with LSST data: through a visualization portal, a Jupyter notebook-based interface and through a variety of web services.
 These serve as an interface to images stored on disk and catalog data stored in the Qserv system (\secref{sect:qserv}).
 This is an intrinsically cloud-oriented approach to the problem of accessing large volumes of LSST data: it is based upon user code being co-located with the data on which it is running.
 
-A key benefit of a cloud-based Science Platform would be scalability: when user demands exceeds the 10\% of the compute budget dedicated to serving them, more capacity would at least be available even if it had to be purchased on demand.
-There is no analogue to this in terms of on-premises infrastructure as cloud bursting from our internal cloud infrastructure to a commercial provider would require transferring potentially large amounts of data.
+A key benefit of a cloud-based Science Platform would be scalability: when user demands exceed the 10\% of the compute budget dedicated to serving them, more capacity would at least be available even if it had to be purchased on demand.
+There is no analogue to this in terms of on-premises infrastructure, as cloud bursting from our internal cloud infrastructure to a commercial provider would require transferring potentially large amounts of data.
 
 \subsubsection{Aside: Public Data Releases}
 
