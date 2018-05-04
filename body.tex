@@ -3,7 +3,6 @@ In this brief note we wish to discuss some potential routes to collaboration wit
 
 If we go ahead with one specific POC we should define more clearly the goal and duration of it and how that might feed into future operations.
 
-{\color{red} Margaret/Michelle - should we have - expected results/metrics could also be the next round and can you look at th technical collaboration section. }
 \section{Technical collaboration}
 
 LSST is already a heavy user of Kubernetes (K8s) both internally and via Google Cloud.
@@ -33,6 +32,19 @@ However, Qserv itself is primarily useful in the context of the Science Platform
 
 To set up a Qserv instance we would need at least 40 large nodes with physically attached storage on the order of 5 terabytes per node.
 To run a set of convincing tests we would need that up for order two months.
+
+Qserv workers currently use 2x8 cores, 128GB memory, 10x2TB
+local-attached disks, so google n1-highmem-16 might be a good fit.  The
+local-attached disks and large number of spindles are primarily designed
+for high bandwidth sequential reads; it's possible that network-attached
+disk can provide similar rates.  We'd like aggregate read bandwidths
+across the cluster of >100 GB/sec.  IOPS are not really a concern;
+around 1000 IOPS aggregate across the cluster is desirable, which should
+be no problem given the number of nodes and (real or virtual) spindles.
+
+	We also need a "czar" node that has higher performance: 3 TB of
+SSD (2 TB persistent, 1 TB could be temporary), 6 TB of disk storage,
+and a large amount of memory.  n1-highmem-64 probably fits.
 
 This would be a  demonstration only — the final catalogs (2032) will be order 15PB and the number of nodes and attached storage eventually have to scale to that size.
 
@@ -92,7 +104,7 @@ Further, the project is required to make these alerts available to the community
 This imposes stringent latency and throughput requirements on items 1 \& 2 above.
 Moving object processing can be run during the day, and is therefore a less challenging — and for this purpose less interesting — use case.
 
-One night of LSST observing generates appoximately 20\,TB of data in a ``bursty'' fashion (we visit each field for a total of 37\,s, taking two consecutive exposures which are combined by the data processing system).
+One night of LSST observing generates approximately 20\,TB of data in a ``bursty'' fashion (we visit each field for a total of 37\,s, taking two consecutive exposures which are combined by the data processing system).
 In addition, the compute resources are more lightly loaded during the daytime, when they are used to perform fewer and simpler analyses of calibration images.
 In order to meet our latency requirements, we have invested in fast networking to enable rapid transfer of this data to processing systems at NCSA.
 
@@ -114,11 +126,21 @@ This suggests two, related, proof of concept exercises:
 
 \subsubsection{Potential needs}
 
-Demonstrating image processing at scale could be achieved with a single processing chain (ie, 189 CPU cores, with access to 4\,GB RAM per core).
+Demonstrating image processing at scale could be achieved with a single processing chain (ie, 189 CPU cores, with access to 4\,GB RAM per core - 189 xn1-standard-64i would probably suit).
 Around 60\,TB disk storage is required for a single night of data (including processed data products).
 However, a smaller dataset could be defined for testing purposes.
 
 Prompt image processing would also require a database instance to serve as the Prompt Products Database (PPDB).
+This requires a relatively
+high-performance database as it is part of our near-realtime processing.
+It eventually needs to store about 80 TB of data, plus indexes, but for
+testing we can probably use 10-20 TB.  While it has been simplest to run
+this on a single node to date, one of the things we'd like to
+investigate is the possibility of sharding it (by rows; it is not
+possible to shard this data by columns).  On a single node, we believe
+the storage will have to be on SSD to provide sufficient IOPS; we likely
+need tens of thousands of IOPS here.  Our prototypes have used up to 32
+cores and 512GB memory.
 
 Deploying a realistic alert distribution system would require three systems, each with access to 24 CPU cores and 80\,GB RAM.
 
