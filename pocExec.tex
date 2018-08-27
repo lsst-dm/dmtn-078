@@ -1,0 +1,45 @@
+
+\section{More focused PoC for Google cloud}
+{\bf this was originally edited as a google doc and is put here as a matter of record.}\\
+We feel the proofs of concept (PoCs) outlined in DMTN-078 that provide the best combination of utility for LSST's decision-making and readiness to be implemented are one based on Qserv (section 3.1) and one based on Prompt Processing (section 3.3).  If time remains, a demonstration of "cloudbursting" LSST Science Platform processing from the LSST Data Facility's private cloud to the Google Cloud (a subset of 3.2) would be useful as well.
+
+Assuming that we will be starting approximately 2018-09-01, Qserv will have been fully converted to Kubernetes deployment, including the internal replication management system.  Data from the WISE survey is already available to be loaded into Qserv, as is a synthetic dataset used for performance benchmarking that is approximately 30\% of the first-year LSST results.  We expect that at least two large tables (Object and Source) from a large reprocessing of Subaru Hyper-SuprimeCam (HSC) data should also be available by then for loading in "DPDD-like" form (the form of the data specified by the LSST Data Products Definition Document).
+
+Proposed Qserv PoC execution plan, with each step incorporating analysis and debugging of any functional or performance issues discovered:
+\begin{enumerate}
+\item Deploy Qserv on Google Cloud with local-attached disks.
+\item Load KPM30, WISE, and HSC datasets into Qserv.
+\item Execute queries from DMTR-52 and DMTR-16 against datasets.
+\item Adjust deployment to use network-attached disks.
+\item Re-execute queries against datasets.
+\item Select one or more Google database services (Cloud SQL, Datastore, Bigtable, etc.) that best matches data and queries; load data into the service.
+\item Re-execute queries (if possible) against database service.
+\item Analyze the potential for solving any query supportability issues (e.g. spherical geometry, near-neighbor queries, simultaneous users).
+\item Analyze the potential for "next-to-database" processing (DMTN-086) with data in Google database service.
+\end{enumerate}
+The Prompt Processing PoC could overlap somewhat with Qserv if resources are available, but otherwise we would anticipate it starting some time before the end of the calendar year.  This PoC will require more shimming and potential technology replacement than the Qserv one.  For example, our systems currently make use of POSIX filesystems.  By the time of the PoC, we might have written plugins for our I/O client that can access an object store.
+
+Proposed Prompt Processing PoC execution plan:
+\begin{enumerate}
+\item Perform high-bandwidth transmission of CCD images from machines at NCSA (e.g. in the Level 1 Test Stand) to Google Cloud storage.
+\item Stand up an instance of the Prompt Products Database.  This currently is anticipated to run in Oracle; we could attempt to substitute a different technology here.
+\item Load master calibration images and templates into Google Cloud storage.
+\item Deploy an instance of the Alert Distribution and Filtering service to Google Cloud.
+\item Deploy a set of simulated alert clients both within and outside Google Cloud.
+\item Execute Alert Production in batch mode on Google Cloud machines, sending alerts to the distribution service.
+\item Investigate the possibility of sharding the Prompt Products Database.
+\item Analyze the applicability of Google workflow/orchestration services (Cloud Composer, Cloud Dataflow) for executing Alert Production.
+
+\end{enumerate}
+The LSST Science Platform is already deployable on Google Cloud, but only with its own internal user file space that is not shared with any other deployment, and with access to LSST data products only through potentially-slower Internet-exposed Web services.
+
+Proposed LSP Cloudburst PoC execution plan:
+\begin{enumerate}
+\item Determine an appropriate configuration to allow JupyterHub at NCSA (and Chile ?) to create pods both locally and remotely in Google Cloud.
+\item Determine how authentication and authorization can be synchronized between NCSA and Google Cloud.
+\item Determine how user files and databases can be shared between NCSA and Google Cloud.  VOSpace and/or WebDAV are potential mechanisms here.
+\item Determine whether LSST data products need to be permanently resident in Google Cloud or if Web APIs are sufficient.
+
+\end{enumerate}
+
+
